@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Mango Fruit Classifier | Home{% endblock %}
+
+{% block body_class %}page-home{% endblock %}
+
+{% block content %}
+<main>
+  <section class="landing-hero">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+          <span class="eyebrow">Know your Mango Fruits with Machine Learning</span>
+          <h1 class="hero-title">Explore the five mango fruit classes and scan your own image in one place.</h1>
+          <p class="hero-copy">
+            This website blends a mango fruit guide with your updated classifier so visitors can learn
+            what makes each fruit class distinct, then upload a mango image and compare the result with a
+            simple profile page.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-mango" href="{{ url_for('welcome') }}">Enter Website</a>
+            <a class="btn btn-outline-mango" href="{{ url_for('classify_mango') }}">Start Scanning</a>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <section class="spotlight-panel">
+            <div class="stat-grid">
+              <article class="stat-card">
+                <strong>{{ variety_count }}</strong>
+                <span>Fruit classes</span>
+              </article>
+              <article class="stat-card">
+                <strong>Fruit AI</strong>
+                <span>Mango fruit classification</span>
+              </article>
+              <article class="stat-card">
+                <strong>Image AI</strong>
+                <span>Keras-based classifier</span>
+              </article>
+              <article class="stat-card">
+                <strong>Upload</strong>
+                <span>Fruit image upload</span>
+              </article>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-shell">
+    <div class="container">
+      <div class="section-heading centered">
+        <span class="eyebrow">Quick Preview</span>
+        <h2 class="section-title-xl">A few mango fruit classes you can explore first</h2>
+        <p class="section-lead">
+          Each profile page focuses on the fruit identity, visible traits, and what makes that class easier to recognize.
+        </p>
+      </div>
+      <div class="row g-4">
+        {% for item in highlights %}
+        <div class="col-md-6 col-xl-3">
+          <article class="mini-guide-card h-100">
+            <img
+              src="{{ url_for('static', filename='images/' ~ item.image) }}"
+              alt="{{ item.name }} mango"
+              class="guide-thumb"
+            />
+            <h3>{{ item.name }}</h3>
+            <p>{{ item.guide }}</p>
+            <a href="{{ url_for('variety_detail', slug=item.slug) }}" class="inline-link">Read guide</a>
+          </article>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

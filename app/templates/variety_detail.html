@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Mango Fruit Classifier | {{ variety.name }}{% endblock %}
+
+{% block body_class %}page-detail{% endblock %}
+
+{% block content %}
+<main class="page-shell">
+  <section class="section-shell pt-5">
+    <div class="container">
+      <div class="detail-hero glass-panel">
+        <div class="row g-4 align-items-center">
+          <div class="col-lg-5">
+            <div class="detail-illustration">
+              <img
+                src="{{ url_for('static', filename='images/' ~ variety.image) }}"
+                alt="{{ variety.name }} mango"
+                class="detail-image"
+              />
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <span class="eyebrow">Fruit Class Profile</span>
+            <h1 class="detail-title">{{ variety.name }}</h1>
+            <p class="detail-tagline">{{ variety.tagline }}</p>
+            <p class="detail-copy">{{ variety.description }}</p>
+
+            <div class="detail-grid">
+              <article class="info-tile">
+                <span class="info-label">Known from</span>
+                <strong>{{ variety.origin }}</strong>
+              </article>
+              <article class="info-tile">
+                <span class="info-label">Harvest time</span>
+                <strong>{{ variety.season }}</strong>
+              </article>
+              <article class="info-tile">
+                <span class="info-label">Taste</span>
+                <strong>{{ variety.taste }}</strong>
+              </article>
+              <article class="info-tile">
+                <span class="info-label">Best enjoyed as</span>
+                <strong>{{ variety.best_for }}</strong>
+              </article>
+            </div>
+
+            <div class="detail-actions">
+              <a class="btn btn-mango" href="{{ url_for('classify_mango') }}">Scan an image</a>
+              <a class="btn btn-outline-mango" href="{{ url_for('mango_section') }}">Back to classes</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% if variety.source_url %}
+      <section class="source-panel mt-4">
+        <div class="source-card">
+          <span class="eyebrow">Reference</span>
+          <p class="source-copy mb-2">
+            This profile was rewritten from published mango references rather than placeholder model text.
+          </p>
+          <a href="{{ variety.source_url }}" target="_blank" rel="noreferrer" class="inline-link">
+            {{ variety.source_name }}
+          </a>
+        </div>
+      </section>
+      {% endif %}
+
+      <section class="section-shell px-0 pb-0 pt-5">
+        <div class="section-heading">
+          <span class="eyebrow">Keep Exploring</span>
+          <h2 class="section-title">More mango fruit classes</h2>
+        </div>
+        <div class="row g-4">
+          {% for item in related %}
+          <div class="col-sm-6 col-lg-4 col-xl-2">
+            <a class="mini-guide-card compact h-100" href="{{ url_for('variety_detail', slug=item.slug) }}">
+              <img
+                src="{{ url_for('static', filename='images/' ~ item.image) }}"
+                alt="{{ item.name }} mango"
+                class="guide-thumb small"
+              />
+              <h3>{{ item.name }}</h3>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
+{% endblock %}

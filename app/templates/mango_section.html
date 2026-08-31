@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Mango Fruit Classifier | Mango Classes{% endblock %}
+
+{% block body_class %}page-varieties{% endblock %}
+
+{% block content %}
+<main class="page-shell">
+  <section class="section-shell pt-5">
+    <div class="container">
+      <div class="section-heading">
+        <span class="eyebrow">Mango Fruit Guide</span>
+        <h1 class="section-title-xl">{{ variety_count }} mango fruit classes in the classifier</h1>
+        <p class="section-lead">
+          Tap a card to open the class profile page. Each page gives you a quick reference for the fruit
+          type, visible cues, and how that class fits into the updated model.
+        </p>
+      </div>
+
+      <div class="row g-4">
+        {% for item in varieties %}
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+          <a class="variety-card square-card h-100" href="{{ url_for('variety_detail', slug=item.slug) }}">
+            <div class="variety-card-media">
+              <img
+                src="{{ url_for('static', filename='images/' ~ item.image) }}"
+                alt="{{ item.name }} mango"
+                class="variety-image"
+              />
+            </div>
+            <div class="variety-card-body">
+              <h2>{{ item.name }}</h2>
+              <p>{{ item.guide }}</p>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

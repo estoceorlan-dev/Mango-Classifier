@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}Mango Fruit Classifier | Scan Image{% endblock %}
+
+{% block body_class %}page-classify{% endblock %}
+
+{% block content %}
+<main class="page-shell">
+  <section class="section-shell pt-5">
+    <div class="container">
+      <div class="row g-4 align-items-stretch">
+        <div class="col-lg-5">
+          <section class="glass-panel h-100">
+            <span class="eyebrow">Mango Guide</span>
+            <h1 class="section-title-xl mb-3">Find the mango variety that looks closest to your fruit</h1>
+            <p class="section-lead">
+              Add a clear mango photo and the app will suggest the closest variety from the guide.
+              After that, you can open the matching mango page and compare the fruit's shape, color, and character.
+            </p>
+            <div class="guide-list">
+              <div class="guide-point">
+                <i class="bi bi-image"></i>
+                <span>Use a bright photo where the mango is easy to see.</span>
+              </div>
+              <div class="guide-point">
+                <i class="bi bi-search"></i>
+                <span>Check the preview first to make sure the fruit is centered and clear.</span>
+              </div>
+              <div class="guide-point">
+                <i class="bi bi-journal-text"></i>
+                <span>Use the mango profile after the result to compare color, size, and overall look.</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="col-lg-7">
+          <section class="glass-panel h-100">
+            <div class="scan-header">
+              <div>
+                <h2 class="section-title mb-2">Check your mango photo</h2>
+                <p class="section-copy mb-0">
+                  Choose a mango picture from your device or take one with the camera, then see which variety it matches best.
+                </p>
+              </div>
+              <div class="scan-tags" aria-label="Upload requirements">
+                <span class="scan-tag"><i class="bi bi-file-earmark-image"></i> Photo formats: PNG, JPG, JPEG, WEBP</span>
+                <span class="scan-tag"><i class="bi bi-hdd"></i> Image size: up to 10 MB</span>
+                <span class="scan-tag"><i class="bi bi-camera"></i> Use your camera if you like</span>
+              </div>
+            </div>
+
+            {% if error %}
+            <div class="alert alert-danger border-0 shadow-sm validation-alert" role="alert" id="validationAlert">
+              {{ error }}
+            </div>
+            {% endif %}
+
+            <form id="uploadForm" method="post" enctype="multipart/form-data" novalidate>
+              <div class="upload-stack">
+                <label for="imageInput" class="upload-dropzone upload-dropzone-rich" id="dropzone">
+                  <input
+                    class="d-none"
+                    type="file"
+                    id="imageInput"
+                    name="image"
+                    accept=".png,.jpg,.jpeg,.webp"
+                    required
+                  />
+                  <div class="upload-content">
+                    <div class="upload-icon"><i class="bi bi-cloud-arrow-up"></i></div>
+                    <div class="upload-copy">
+                      <h3 class="upload-title">Add a mango photo</h3>
+                      <p class="upload-subtitle" id="dropzoneHint">
+                        Drag a photo here or click to choose one from your files.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="upload-meta">
+                    <span class="upload-meta-pill">Best with one mango in good light</span>
+                    <span class="upload-meta-pill">Preview shows right away</span>
+                  </div>
+                </label>
+
+                <div class="camera-actions-inline">
+                  <button type="button" id="openCameraBtn" class="btn btn-outline-mango">
+                    <i class="bi bi-camera"></i>
+                    Open Camera
+                  </button>
+                  <button type="button" id="stopCameraBtn" class="btn btn-outline-mango d-none">
+                    <i class="bi bi-camera-video-off"></i>
+                    Close Camera
+                  </button>
+                </div>
+
+                <div id="validationMessage" class="validation-box d-none" role="alert" aria-live="polite"></div>
+              </div>
+
+              <div class="media-grid mt-4">
+                <div class="preview-card preview-card-rich" id="previewCard">
+                  <div class="preview-frame">
+                    <div class="preview-empty" id="previewEmpty">
+                      <i class="bi bi-card-image"></i>
+                      <span>No mango photo selected yet</span>
+                    </div>
+                    <video id="cameraVideo" autoplay playsinline class="camera-video d-none"></video>
+                    <img id="previewImage" class="preview-image d-none" alt="Selected image preview" />
+                  </div>
+                  <div class="preview-meta">
+                    <span class="preview-label" id="previewLabel">Your photo</span>
+                    <span id="fileName" class="preview-name">Waiting for a mango photo or camera capture</span>
+                    <div class="preview-stats">
+                      <span id="fileType" class="preview-stat">No photo chosen</span>
+                      <span id="fileSize" class="preview-stat">0 MB</span>
+                    </div>
+                    <div class="camera-button-row d-none" id="cameraButtonRow">
+                      <button type="button" id="captureBtn" class="btn btn-mango">
+                        <i class="bi bi-camera-fill"></i>
+                        Use This Photo
+                      </button>
+                      <button type="button" id="cancelCaptureBtn" class="btn btn-outline-mango">
+                        Back
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-action-bar mt-4">
+                <p class="action-helper mb-0" id="actionHelper">
+                  Choose a mango photo first to continue.
+                </p>
+                <button id="submitButton" class="btn btn-mango action-submit" type="submit" disabled>
+                  <span class="button-text">See Mango Match</span>
+                  <span class="spinner-border spinner-border-sm d-none" id="loadingSpinner" aria-hidden="true"></span>
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+
+      {% if result %}
+      <div
+        class="modal fade result-modal"
+        id="resultModal"
+        tabindex="-1"
+        aria-labelledby="resultModalLabel"
+        aria-hidden="true"
+        data-show-on-load="true"
+      >
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+          <div class="modal-content result-modal-content">
+            <div class="modal-body p-0">
+              <button type="button" class="btn-close result-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <div class="glass-panel result-panel">
+                <div class="row g-4 align-items-center">
+                  <div class="col-lg-4">
+                    <img
+                      src="{{ url_for('static', filename=result.image_url) }}"
+                      alt="Uploaded mango image"
+                      class="result-image"
+                    />
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="result-badge-row">
+                      <span class="eyebrow">Closest Match</span>
+                      <span class="confidence-chip">{{ result.confidence_percent }}% match</span>
+                    </div>
+                    <div class="result-status">
+                      <i class="bi bi-check-circle-fill"></i>
+                      <span>Your mango photo has been matched with the closest variety in the guide. Compare it with the notes below for a better check.</span>
+                    </div>
+                    <h2 class="result-class" id="resultModalLabel">{{ result.predicted_class }}</h2>
+                    <p class="result-copy">{{ result.guide_text }}</p>
+
+                    <div class="result-metrics">
+                      <article class="metric-box">
+                        <span class="metric-label">Suggested variety</span>
+                        <strong>{{ result.predicted_class }}</strong>
+                      </article>
+                      <article class="metric-box">
+                        <span class="metric-label">Match level</span>
+                        <strong>{{ result.confidence_percent }}%</strong>
+                      </article>
+                      <article class="metric-box">
+                        <span class="metric-label">Photo used</span>
+                        <strong>{{ result.filename }}</strong>
+                      </article>
+                    </div>
+
+                    <div class="confidence-block">
+                      <div class="confidence-header">
+                        <span>How strong the match looks</span>
+                        <span>{{ result.confidence_percent }}%</span>
+                      </div>
+                      <div
+                        class="progress custom-progress"
+                        role="progressbar"
+                        aria-valuenow="{{ result.confidence_percent }}"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      >
+                        <div class="progress-bar progress-bar-mango" style="width: {{ result.confidence_percent }}%"></div>
+                      </div>
+                    </div>
+
+                    {% if result.variety_url %}
+                    <div class="result-actions">
+                      <a class="btn btn-mango" href="{{ result.variety_url }}">Open {{ result.predicted_class }} guide</a>
+                      <a class="btn btn-outline-mango" href="{{ url_for('mango_section') }}">View all mango guides</a>
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+</main>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Mango Fruit Classifier | Welcome{% endblock %}
+
+{% block body_class %}page-welcome{% endblock %}
+
+{% block content %}
+<main>
+  <section class="welcome-hero">
+    <div class="welcome-bg" style="background-image: url('{{ url_for('assets', filename='images/background.png') }}');"></div>
+    <div class="container position-relative">
+      <div class="welcome-shell text-center">
+        <span class="eyebrow light">Welcome Guide</span>
+        <h1 class="welcome-title">Mango Fruit Classification</h1>
+        <p class="welcome-copy">
+          This project now focuses on mango fruit images instead of mango leaves. Explore the five fruit
+          classes in the updated model, review their profile pages, and then run the classifier on a mango
+          photo to compare the prediction with the matching class details.
+        </p>
+        <div class="welcome-actions">
+          <a class="btn btn-mango btn-lg" href="{{ url_for('mango_section') }}">See Mango Classes</a>
+          <a class="btn btn-outline-light btn-lg rounded-pill px-4" href="{{ url_for('classify_mango') }}">Scan Image</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}
