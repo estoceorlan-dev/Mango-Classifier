@@ -1,0 +1,11 @@
+{% macro cards(items, descriptions=false) %}
+<div class="cards">
+  {% for item in items %}
+  <a class="card" href="{{ url_for('variety_detail', slug=item.slug) }}">
+    <div class="card-photo"><img src="{{ url_for('static', filename='images/' ~ item.image) }}" alt="" loading="lazy"></div>
+    <h3>{{ item.name }} <span aria-hidden="true">↗</span></h3>
+    {% if descriptions %}<p>{{ item.guide }}</p>{% endif %}
+  </a>
+  {% endfor %}
+</div>
+{% endmacro %}

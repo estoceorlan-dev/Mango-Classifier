@@ -1,28 +1,10 @@
 {% extends "base.html" %}
-
-{% block title %}Mango Fruit Classifier | Welcome{% endblock %}
-
-{% block body_class %}page-welcome{% endblock %}
-
+{% block title %}How it works | Mango Field Guide{% endblock %}
 {% block content %}
-<main>
-  <section class="welcome-hero">
-    <div class="welcome-bg" style="background-image: url('{{ url_for('assets', filename='images/background.png') }}');"></div>
-    <div class="container position-relative">
-      <div class="welcome-shell text-center">
-        <span class="eyebrow light">Welcome Guide</span>
-        <h1 class="welcome-title">Mango Fruit Classification</h1>
-        <p class="welcome-copy">
-          This project now focuses on mango fruit images instead of mango leaves. Explore the five fruit
-          classes in the updated model, review their profile pages, and then run the classifier on a mango
-          photo to compare the prediction with the matching class details.
-        </p>
-        <div class="welcome-actions">
-          <a class="btn btn-mango btn-lg" href="{{ url_for('mango_section') }}">See Mango Classes</a>
-          <a class="btn btn-outline-light btn-lg rounded-pill px-4" href="{{ url_for('classify_mango') }}">Scan Image</a>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
+<section class="split page">
+  <div><h1>How it works</h1><p class="lead">Photograph one mango in good light. The classifier compares your image with {{ variety_count }} known varieties and suggests its closest match.</p>
+  <p>Open the matching profile to compare the fruit’s shape, skin, and flesh with the guide.</p>
+  <div class="actions"><a class="button" href="{{ url_for('classify_mango') }}">Identify a mango ↗</a><a class="text-link" href="{{ url_for('mango_section') }}">Browse varieties →</a></div></div>
+  <img class="feature-photo" src="{{ url_for('static', filename='images/Amrapali.jpg') }}" alt="Amrapali mango">
+</section>
 {% endblock %}
