@@ -116,7 +116,7 @@ if (form) {
     }, "image/jpeg", 0.92);
   });
 
-  form.addEventListener("submit", event => {
+  form.addEventListener("submit", async event => {
     if (!input.files.length || stream) {
       event.preventDefault();
       feedback("Choose or capture a photo first.");
@@ -124,6 +124,35 @@ if (form) {
     }
     submit.disabled = true;
     submit.textContent = "Identifying…";
+    if (!form.dataset.endpoint) return;
+    event.preventDefault();
+    const result = byId("apiResult");
+    visible(result, false);
+    const file = input.files[0];
+    form.inert = true;
+    feedback("Identifying your mango. The first request may take a minute.");
+    try {
+      const response = await fetch(form.dataset.endpoint, { method: "POST", body: new FormData(form) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Identification failed. Try again.");
+      const img = result.querySelector("img");
+      if (img.src) URL.revokeObjectURL(img.src);
+      img.src = URL.createObjectURL(file);
+      byId("match").textContent = data.variety;
+      result.querySelector("strong").textContent = data.confidence_percent + "% confidence";
+      result.querySelector("p").textContent = data.guidance;
+      result.querySelector("a").href = "/variety/" + encodeURIComponent(data.slug);
+      feedback();
+      visible(result, true);
+      result.scrollIntoView({ block: "center" });
+    } catch (error) {
+      feedback(error instanceof TypeError || error instanceof SyntaxError
+        ? "Could not reach the classifier. Wait a moment and try again." : error.message);
+    } finally {
+      form.inert = false;
+      submit.textContent = "Identify variety";
+      showSelection();
+    }
   });
   window.addEventListener("pageshow", () => {
     submit.textContent = "Identify variety";

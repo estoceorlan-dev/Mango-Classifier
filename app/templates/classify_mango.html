@@ -12,7 +12,14 @@
     {% if result.variety_url %}<a class="text-link" href="{{ result.variety_url }}">Read the {{ result.predicted_class }} profile →</a>{% endif %}</div>
   </section>
   {% endif %}
-  <form id="uploadForm" method="post" enctype="multipart/form-data" class="panel scanner" novalidate>
+  {% if config.PREDICTION_ENDPOINT %}
+  <section id="apiResult" class="result panel d-none" aria-live="polite" aria-labelledby="match">
+    <img alt="Your uploaded mango">
+    <div><span class="caption">Closest match</span><h2 id="match"></h2>
+    <strong></strong><p></p><a class="text-link">Read variety profile →</a></div>
+  </section>
+  {% endif %}
+  <form id="uploadForm" data-endpoint="{{ config.PREDICTION_ENDPOINT or '' }}" method="post" enctype="multipart/form-data" class="panel scanner" novalidate>
     <h2>{{ 'Try another photo' if result else 'Your photo' }}</h2>
     {% if error %}<p id="validationAlert" class="error" role="alert">{{ error }}</p>{% endif %}
     <label id="dropzone" class="drop">

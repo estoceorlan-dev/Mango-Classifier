@@ -5,7 +5,6 @@ from flask import Flask, abort, render_template, request, send_from_directory, u
 from werkzeug.utils import secure_filename
 import os
 
-from utils.predictor import PredictionError, predict_image
 
 
 APP_DIR = Path(__file__).resolve().parent
@@ -115,6 +114,9 @@ def build_prediction_guidance(confidence_percent: float) -> str:
 
 
 def handle_prediction_request(template_name: str):
+    if request.method == "POST":
+        from utils.predictor import PredictionError, predict_image
+
     result = None
     error = None
 

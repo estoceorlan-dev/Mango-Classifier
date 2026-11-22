@@ -1,0 +1,9 @@
+models/
+notebooks/
+src/
+app/static/uploads/
+dist/
+.frontend-deps/
+.env*
+venv/
+.venv/
